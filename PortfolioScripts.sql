@@ -16,6 +16,7 @@
 
 ------ Part 1 : General exploration -----
 
+--DROP TABLE IF EXISTS Portfolio.dbo.Deaths
 SELECT * 
 FROM Deaths ;
 
@@ -291,6 +292,7 @@ AND stringency_index is not null
 
 
 
+
 DROP VIEW IF EXISTS STRINGENY_DATA
 
 CREATE VIEW 
@@ -305,30 +307,38 @@ WHERE  CAST(date AS DATE) like '2021-05-31'
 
 
 
-DROP VIEW Vaccinated_People
+DROP VIEW IF EXISTS Vaccinated_People
 
 CREATE VIEW
-Vaccinated_People AS
+Vaccinated_People AS 
 (
-SELECT 
-	CAST(people_vaccinated as INT) as Vaccinated_People
+
+SELECT SUM (CONVERT(int,M)) as VACCINATIONS_COUNT
+FROM
+(
+SELECT MAX(people_vaccinated) as M,location
 FROM Vaccinations
-WHERE continent IS NOT NULL 
-	AND people_vaccinated IS NOT NULL
---ORDER BY Vaccinated_People DESC ;
+GROUP BY location
+) V
+
 )
+
+--SELECT * FROM Vaccinated_People
+
 
 
 
 
 DROP VIEW IF EXISTS Total_Deaths
 
-CREATE VIEW
+CREATE VIEW 
 Total_Deaths As
 (
-SELECT 
-	cast(total_deaths as int) as Totaldeaths
+SELECT SUM(convert(int,MAXIMUM_DEATHS)) AS Death_Count
+FROM(
+SELECT MAX(total_deaths) As MAXIMUM_DEATHS,location
 FROM Deaths
-WHERE continent IS NOT NULL AND total_deaths IS NOT NULL  
---ORDER BY Totaldeaths desc ;
+GROUP BY location) D
 )
+
+
