@@ -105,7 +105,7 @@ SELECT V.Date ,
 	sum(V.Admitted_people_per_day) over (order by date) as Rolling_Sum
 FROM 
 (
-SELECT CAST(date as DATE) as Date, sum(new_cases) as Admitted_people_per_day
+SELECT CAST(date as DATE) as Date, sum((convert(int,new_cases)) as Admitted_people_per_day
 from Hospitalisation
 group by date
 ) V ;
@@ -316,7 +316,7 @@ Vaccinated_People AS
 SELECT SUM (CONVERT(int,M)) as VACCINATIONS_COUNT
 FROM
 (
-SELECT MAX(people_vaccinated) as M,location
+SELECT MAX((convert(int,people_vaccinated)) as M,location
 FROM Vaccinations
 GROUP BY location
 ) V
@@ -336,7 +336,7 @@ Total_Deaths As
 (
 SELECT SUM(convert(int,MAXIMUM_DEATHS)) AS Death_Count
 FROM(
-SELECT MAX(total_deaths) As MAXIMUM_DEATHS,location
+SELECT MAX((convert(int,total_deaths)) As MAXIMUM_DEATHS,location
 FROM Deaths
 GROUP BY location) D
 )
