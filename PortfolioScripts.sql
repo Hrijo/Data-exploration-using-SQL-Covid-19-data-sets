@@ -214,9 +214,9 @@ CREATE TABLE #CALTABLE
 	Continent NVARCHAR(255) ,
 	Location NVARCHAR(255) ,
 	Population NUMERIC,
-	Total_Cases INT,
-	New_Cases INT,
-	New_Deaths INT,
+	Total_Cases Numeric, 
+	New_Cases Numeric, 
+	New_Deaths Numeric,
 	Stringency_Index Float,
 	People_Vaccinated NUMERIC
 ) ;
