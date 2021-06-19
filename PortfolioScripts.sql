@@ -26,17 +26,17 @@ FROM Vaccinations ;
 SELECT * 
 FROM Hospitalisation ;
 
------ As the total_deaths column is of type nvarchar it has been cast as an interger -----
+----- As the total_deaths column is of type nvarchar it has been cast as an Numeric Value -----
 
 SELECT * ,
-	cast(total_deaths as int) as Totaldeaths
+	cast(total_deaths as NUMERIC) as Totaldeaths
 FROM Deaths
 WHERE continent IS NOT NULL AND total_deaths IS NOT NULL  
 ORDER BY Totaldeaths desc ;
 
 --- Currently North America has the most deaths due to Covid-19 with 5,98,764 Deaths ---
 
-SELECT * ,cast(total_deaths as int) as Totaldeaths
+SELECT * ,cast(total_deaths as Numeric) as Totaldeaths
 FROM Deaths
 WHERE location = 'India' 
 	AND total_deaths IS NOT NULL
@@ -49,7 +49,7 @@ ORDER BY Totaldeaths DESC ;
 --- Vaccinations info ---
 
 SELECT * ,
-	CAST(people_vaccinated as INT) as Vaccinated_People
+	CAST(people_vaccinated as NUMERIC) as Vaccinated_People
 FROM Vaccinations
 WHERE continent IS NOT NULL 
 	AND people_vaccinated IS NOT NULL
@@ -61,8 +61,8 @@ ORDER BY Vaccinated_People DESC ;
 
 SELECT Location,
 	population,total_cases,total_vaccinations,
-	CAST(people_vaccinated as INT) as Vaccinated_People,
-	CAST(people_vaccinated as INT)/population * 100 as PercentVaccinated
+	CAST(people_vaccinated as Numeric) as Vaccinated_People,
+	CAST(people_vaccinated as Numeric)/population * 100 as PercentVaccinated
 FROM Vaccinations
 WHERE continent IS NOT NULL 
 	AND people_vaccinated IS NOT NULL
@@ -76,8 +76,8 @@ ORDER BY
 SELECT Location,
 	population,
 	total_cases,total_vaccinations, 
-	CAST(people_vaccinated as INT) as Vaccinated_People, 
-	CAST(people_vaccinated as INT)/population * 100 as PercentVaccinated
+	CAST(people_vaccinated as Numeric) as Vaccinated_People, 
+	CAST(people_vaccinated as Numeric)/population * 100 as PercentVaccinated
 FROM Vaccinations
 WHERE continent IS NOT NULL 
 	AND people_vaccinated IS NOT NULL
@@ -92,7 +92,7 @@ SELECT A.Date,
 FROM
 (
 SELECT cast(date as date) as Date,  
-	Sum(cast (icu_patients as int)) as Total_patients_per_day	
+	Sum(cast (icu_patients as Numeric)) as Total_patients_per_day	
 From Hospitalisation
 GROUP BY CAST(date AS DATE)
 ) A ;
@@ -105,7 +105,7 @@ SELECT V.Date ,
 	sum(V.Admitted_people_per_day) over (order by date) as Rolling_Sum
 FROM 
 (
-SELECT CAST(date as DATE) as Date, sum((convert(int,new_cases)) as Admitted_people_per_day
+SELECT CAST(date as DATE) as Date, sum((convert(Numeric,new_cases)) as Admitted_people_per_day
 from Hospitalisation
 group by date
 ) V ;
@@ -120,7 +120,7 @@ group by date
 WITH MAXIMUM_VACCINATIONS --(location, MAXVACC) 
 AS(
 SELECT location, 
-	MAX(CAST(people_vaccinated as INT)) OVER (PARTITION BY location) as MAXVACC
+	MAX(CAST(people_vaccinated as Numeric)) OVER (PARTITION BY location) as MAXVACC
 FROM Vaccinations
 WHERE people_vaccinated IS NOT NULL 
 	AND continent IS NOT NULL  
@@ -148,7 +148,7 @@ CREATE TABLE #MAXHOSPITALISATIONS
 
 INSERT INTO #MAXHOSPITALISATIONS
 SELECT location, 
-	MAX(CAST(people_vaccinated as INT)) OVER (PARTITION BY location) as MAXVACC
+	MAX(CAST(people_vaccinated as Numeric)) OVER (PARTITION BY location) as MAXVACC
 FROM Vaccinations
 WHERE people_vaccinated IS NOT NULL 
 	AND continent IS NOT NULL  
@@ -313,10 +313,10 @@ CREATE VIEW
 Vaccinated_People AS 
 (
 
-SELECT SUM (CONVERT(int,M)) as VACCINATIONS_COUNT
+SELECT SUM (CONVERT(Numeric,M)) as VACCINATIONS_COUNT
 FROM
 (
-SELECT MAX((convert(int,people_vaccinated)) as M,location
+SELECT MAX((convert(Numeric,people_vaccinated)) as M,location
 FROM Vaccinations
 GROUP BY location
 ) V
@@ -334,9 +334,9 @@ DROP VIEW IF EXISTS Total_Deaths
 CREATE VIEW 
 Total_Deaths As
 (
-SELECT SUM(convert(int,MAXIMUM_DEATHS)) AS Death_Count
+SELECT SUM(convert(Numeric,MAXIMUM_DEATHS)) AS Death_Count
 FROM(
-SELECT MAX((convert(int,total_deaths)) As MAXIMUM_DEATHS,location
+SELECT MAX((convert(Numeric,total_deaths)) As MAXIMUM_DEATHS,location
 FROM Deaths
 GROUP BY location) D
 )
