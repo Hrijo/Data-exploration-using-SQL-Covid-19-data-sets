@@ -11,7 +11,7 @@
 -- Part 3 demonstrates JOINS
 -- Part 4 will demonstrate use of CASE statements
 -- Part 5 Creating VIEWS for VISUALIZATION using Tableau, the visualisations and dashboards can be found in 
--- 
+-- https://public.tableau.com/app/profile/hrishikesh5514/viz/Project_demo_dash/Dashboard1
 
 
 ------ Part 1 : General exploration -----
